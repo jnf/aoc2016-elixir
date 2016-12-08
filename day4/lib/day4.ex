@@ -30,14 +30,13 @@ defmodule Day4 do
       :ok
 
       iex> Day4.decode "input.txt"
-      :ok
+      {:ok, "984", "northpoleCobjectCstorage"}
   """
-  def decode(file) do
+  def decode(file, phrase \\ ~r/northpole/) do
     File.stream!(file, [:utf8])
       |> Stream.map(&prepLine/1)
       |> Stream.filter_map(&filter/1, &shift/1)
-      |> Stream.map(&IO.inspect/1)
-      |> Stream.run
+      |> Enum.find(fn({:ok, sector, name}) -> String.match?(name, phrase) end)
   end
 
   defp filter(line) do
@@ -50,7 +49,7 @@ defmodule Day4 do
   defp shift(%{ "code" => code, "sector" => sector, "checksum" => checksum }) do
     offset = rem to_i(sector), 26
     phrase = to_charlist(code) |> Enum.map(fn (n) -> if n + offset > 122, do: n + offset - 26, else: n + offset end)
-    {:ok, sector, phrase}
+    {:ok, sector, to_string phrase}
   end
 
   @doc ~S"""
