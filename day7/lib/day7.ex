@@ -24,8 +24,7 @@ defmodule Day7 do
     iex> Day7.ssl? %{"x" => "z", "y" => "b"}, ["aaa", "zaz", "adsbzb"]
     true
   """
-  def ssl?(aba, babs) do
-    %{"x" => x, "y" => y} = aba
+  def ssl?(%{"x" => x, "y" => y}, babs) do
     Enum.any? babs, &(String.contains? &1, y <> x <> y)
   end
 
